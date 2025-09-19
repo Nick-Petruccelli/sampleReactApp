@@ -7,7 +7,7 @@ function CustomerPage() {
 
   const [customer, setCustomer] = useState<Customer>();
 
-  useEffect(() => {
+  function loadCustomerData() {
     fetch("http://localhost:8080/get-customer/" + customerId)
       .then((response) => response.json())
       .then((data: Customer) => {
@@ -17,7 +17,38 @@ function CustomerPage() {
       .catch((err) => {
         console.log(err.message);
       });
-  }, []);
+  }
+
+  function editCustomer(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const formJson = Object.fromEntries(formData.entries());
+    console.log(formJson);
+    const requestOptions = { method: "PUT" };
+    if (formJson["nameInput"] != "") {
+      fetch("http://localhost:8080/update-customer-name/" + customerId + "/" + formJson["nameInput"], requestOptions)
+        .catch((err) => console.log(err.message))
+        .then(loadCustomerData);
+    }
+    if (formJson["postalCodeInput"] != "") {
+      fetch("http://localhost:8080/update-customer-postalCode/" + customerId + "/" + formJson["streetNumberInput"], requestOptions)
+        .catch((err) => console.log(err.message))
+        .then(loadCustomerData);
+    }
+    if (formJson["cityInput"] != "") {
+      fetch("http://localhost:8080/update-customer-city/" + customerId + "/" + formJson["cityInput"], requestOptions)
+        .catch((err) => console.log(err.message))
+        .then(loadCustomerData);
+    }
+    if (formJson["provinceInput"] != "") {
+      fetch("http://localhost:8080/update-customer-province/" + customerId + "/" + formJson["provinceInput"], requestOptions)
+        .catch((err) => console.log(err.message))
+        .then(loadCustomerData);
+    }
+  }
+
+  useEffect(loadCustomerData, []);
 
   return (
     <div>
@@ -35,6 +66,22 @@ function CustomerPage() {
           })}
         </>
         : ("loading...")}
+      <h2>Edit Customer</h2>
+      <form className="editCustomerForm" onSubmit={editCustomer}>
+        <label>
+          Name: <input name="nameInput" />
+        </label>
+        <label>
+          Postal Code: <input name="postalCodeInput" />
+        </label>
+        <label>
+          City: <input name="cityInput" />
+        </label>
+        <label>
+          Province: <input name="provinceInput" />
+        </label>
+        <button type='submit'>Submit</button>
+      </form>
     </div>
   );
 }
