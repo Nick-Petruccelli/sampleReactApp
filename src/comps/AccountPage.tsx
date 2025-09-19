@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { Customer } from '../types/Customer.types';
+import type { Account } from '../types/Account.types';
 
 function AccountPage() {
   const accountId = Number(useParams<{ accountId: string }>().accountId);
@@ -11,7 +11,7 @@ function AccountPage() {
   function loadAccountData() {
     fetch("http://localhost:8080/get-account/" + accountId)
       .then((response) => response.json())
-      .then((data: Customer) => {
+      .then((data: Account) => {
         console.log(data);
         setAccount(data);
       })
@@ -35,23 +35,13 @@ function AccountPage() {
     const formJson = Object.fromEntries(formData.entries());
     console.log(formJson);
     const requestOptions = { method: "PUT" };
-    if (formJson["nameInput"] != "") {
-      fetch("http://localhost:8080/update-customer-name/" + accountId + "/" + formJson["nameInput"], requestOptions)
+    if (formJson["balanceInput"] != "") {
+      fetch("http://localhost:8080/update-account-balance/" + accountId + "/" + formJson["balanceInput"], requestOptions)
         .catch((err) => console.log(err.message))
         .then(loadAccountData);
     }
-    if (formJson["postalCodeInput"] != "") {
-      fetch("http://localhost:8080/update-customer-postalCode/" + accountId + "/" + formJson["streetNumberInput"], requestOptions)
-        .catch((err) => console.log(err.message))
-        .then(loadAccountData);
-    }
-    if (formJson["cityInput"] != "") {
-      fetch("http://localhost:8080/update-customer-city/" + accountId + "/" + formJson["cityInput"], requestOptions)
-        .catch((err) => console.log(err.message))
-        .then(loadAccountData);
-    }
-    if (formJson["provinceInput"] != "") {
-      fetch("http://localhost:8080/update-customer-province/" + accountId + "/" + formJson["provinceInput"], requestOptions)
+    if (formJson["interestRateInput"] != "") {
+      fetch("http://localhost:8080/update-account-interestRate/" + accountId + "/" + formJson["interestRateInput"], requestOptions)
         .catch((err) => console.log(err.message))
         .then(loadAccountData);
     }
@@ -73,16 +63,10 @@ function AccountPage() {
       <h2>Edit Customer</h2>
       <form className="editCustomerForm" onSubmit={editAccount}>
         <label>
-          Name: <input name="nameInput" />
+          Balance: <input name="balanceInput" />
         </label>
         <label>
-          Postal Code: <input name="postalCodeInput" />
-        </label>
-        <label>
-          City: <input name="cityInput" />
-        </label>
-        <label>
-          Province: <input name="provinceInput" />
+          Interest Rate: <input name="interestRateInput" />
         </label>
         <button type='submit'>Submit</button>
       </form>
