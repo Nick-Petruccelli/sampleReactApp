@@ -29,6 +29,22 @@ function CustomerPage() {
       });
   }
 
+  function createSavingsAccount() {
+    fetch("http://localhost:8080/create-savings-account/" + customerId, { method: "PUT" })
+      .catch((err) => console.log(err.message))
+      .then(() => {
+        navigate("/");
+      });
+  }
+
+  function createCheckingAccount() {
+    fetch("http://localhost:8080/create-checking-account/" + customerId, { method: "PUT" })
+      .catch((err) => console.log(err.message))
+      .then(() => {
+        navigate("/");
+      });
+  }
+
   function editCustomer(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.target;
@@ -98,6 +114,8 @@ function CustomerPage() {
         </label>
         <button type='submit'>Submit</button>
       </form>
+      <button onClick={createSavingsAccount}>Create Savings Account</button>
+      <button onClick={createCheckingAccount}>Create Checking Account</button>
       <button onClick={deleteCustomer}>Delete</button>
     </div>
   );
