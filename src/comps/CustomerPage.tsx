@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Customer } from '../types/Customer.types';
+import AccountListNode from './AccountListNode';
 
 function CustomerPage() {
   const customerId = Number(useParams<{ customerId: string }>().customerId);
@@ -70,9 +71,15 @@ function CustomerPage() {
           <h3>Province: {customer.address.province}</h3>
           <h3>Postal Code: {customer.address.postalCode}</h3>
           <h2>Accounts:</h2>
-          {customer.accounts.map((account) => {
-            return <h3>accountId: {account.accountId} </h3>;
-          })}
+          <div className='accountList'>
+            <div className="customerNode">
+              <p>accountId:</p>
+              <p>balance:</p>
+            </div>
+            {customer.accounts.map((account) => {
+              return <AccountListNode account={account} />;
+            })}
+          </div>
         </>
         : ("loading...")}
       <h2>Edit Customer</h2>
