@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { Customer } from '../types/Customer.types';
 
 function CustomerPage() {
   const customerId = Number(useParams<{ customerId: string }>().customerId);
 
   const [customer, setCustomer] = useState<Customer>();
+  const navigate = useNavigate();
 
   function loadCustomerData() {
     fetch("http://localhost:8080/get-customer/" + customerId)
@@ -16,6 +17,14 @@ function CustomerPage() {
       })
       .catch((err) => {
         console.log(err.message);
+      });
+  }
+
+  function deleteCustomer() {
+    fetch("http://localhost:8080/delete-customer/" + customerId, { method: "DELETE" })
+      .catch((err) => console.log(err.message))
+      .then(() => {
+        navigate("/");
       });
   }
 
@@ -82,6 +91,7 @@ function CustomerPage() {
         </label>
         <button type='submit'>Submit</button>
       </form>
+      <button onClick={deleteCustomer}>Delete</button>
     </div>
   );
 }
